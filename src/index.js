@@ -1,0 +1,61 @@
+/*
+ * LightningChartJS example showcasing the TimeTickStrategy feature which is ideal for displaying timestamp data between couple days all the way down to microseconds level.
+ */
+// Import LightningChartJS
+const lcjs = require('@arction/lcjs')
+
+// Extract required parts from LightningChartJS.
+const {
+    lightningChart,
+    AxisTickStrategies,
+    Themes
+} = lcjs
+
+// Import data-generators from 'xydata'-library.
+const {
+    createProgressiveTraceGenerator
+} = require('@arction/xydata')
+
+const chart = lightningChart()
+    .ChartXY({
+        // theme: Themes.darkGold
+    })
+    .setTitle('TimeTickStrategy example')
+    .setPadding({ right: 40 })
+    .setMouseInteractionsWhileScrolling(true)
+
+const axisX = chart
+    .getDefaultAxisX()
+    // Enable TimeTickStrategy for X Axis.
+    .setTickStrategy(AxisTickStrategies.Time)
+
+const axisY = chart.getDefaultAxisY()
+
+const series = chart.addLineSeries({
+    dataPattern: {
+        pattern: 'ProgressiveX',
+    },
+})
+
+const legend = chart.addLegendBox().add(chart)
+    // Dispose example UI elements automatically if they take too much space. This is to avoid bad UI on mobile / etc. devices.
+    .setAutoDispose({
+        type: 'max-width',
+        maxWidth: 0.30,
+    })
+
+// Generate ~8 hours of data for line series.
+const numberOfPoints = 100 * 1000
+// TimeTickStrategy interprets values as milliseconds (UNIX timestamp).
+const xInterval = 8 * 60 * 60 * 1000
+createProgressiveTraceGenerator()
+    .setNumberOfPoints(numberOfPoints)
+    .generate()
+    .toPromise()
+    .then((data) => {
+        data = data.map((p) => ({
+            x: (p.x * xInterval) / numberOfPoints,
+            y: p.y,
+        }))
+        series.add(data)
+    })

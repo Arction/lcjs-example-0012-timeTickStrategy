@@ -4,17 +4,13 @@
 // Import LightningChartJS
 const lcjs = require('@arction/lcjs')
 
+const xydata = require('@arction/xydata')
+
 // Extract required parts from LightningChartJS.
-const {
-    lightningChart,
-    AxisTickStrategies,
-    Themes
-} = lcjs
+const { lightningChart, AxisTickStrategies, Themes } = lcjs
 
 // Import data-generators from 'xydata'-library.
-const {
-    createProgressiveTraceGenerator
-} = require('@arction/xydata')
+const { createProgressiveTraceGenerator } = xydata
 
 const chart = lightningChart()
     .ChartXY({
@@ -22,7 +18,6 @@ const chart = lightningChart()
     })
     .setTitle('TimeTickStrategy example')
     .setPadding({ right: 40 })
-    .setMouseInteractionsWhileScrolling(true)
 
 const axisX = chart
     .getDefaultAxisX()
@@ -37,11 +32,13 @@ const series = chart.addLineSeries({
     },
 })
 
-const legend = chart.addLegendBox().add(chart)
+const legend = chart
+    .addLegendBox()
+    .add(chart)
     // Dispose example UI elements automatically if they take too much space. This is to avoid bad UI on mobile / etc. devices.
     .setAutoDispose({
         type: 'max-width',
-        maxWidth: 0.30,
+        maxWidth: 0.3,
     })
 
 // Generate ~8 hours of data for line series.

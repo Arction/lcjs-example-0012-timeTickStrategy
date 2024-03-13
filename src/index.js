@@ -14,7 +14,7 @@ const { createProgressiveTraceGenerator } = xydata
 
 const chart = lightningChart()
     .ChartXY({
-        theme: Themes[new URLSearchParams(window.location.search).get('theme') || 'darkGold'] || undefined,
+        theme: Themes[new URLSearchParams(window.location.search).get('theme') || 'darkGold'] || undefined
     })
     .setTitle('TimeTickStrategy example')
     .setPadding({ right: 40 })
